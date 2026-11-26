@@ -1,0 +1,20 @@
+variant: fcos
+version: 1.7.0
+storage:
+  disks:
+    - device: /dev/nvme1n1
+      partitions:
+        - number: 5
+          label: root-0
+          size_mib: 65536
+        - number: 6
+          label: var-0
+          size_mib: 16382
+    - device: /dev/nvme0n1
+      partitions:
+        - number: 1
+          label: root-1
+          size_mib: 65536
+        - number: 2
+          label: var-1
+          size_mib: 16382

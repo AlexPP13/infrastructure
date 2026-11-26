@@ -1,0 +1,9 @@
+<pool type='logical'>
+  <name>libvirt</name>
+  <source>
+    <name>libvirt</name>
+  </source>
+  <target>
+    <path>/dev/libvirt</path>
+  </target>
+</pool>

@@ -1,0 +1,16 @@
+[Unit]
+Description=Compile system dconf defaults
+ConditionPathExists=/usr/bin/dconf
+ConditionPathExists=/etc/dconf/db/local.d
+ConditionPathExists=!/etc/as13-ws/dconf-updated
+After=local-fs.target
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/install --directory --mode=0755 /etc/as13-ws
+ExecStart=/usr/bin/dconf update
+ExecStartPost=/usr/bin/touch /etc/as13-ws/dconf-updated
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Install Flatpaks declared by the operating system
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/usr/bin/flatpak
+ConditionPathExists=/etc/flatpak/preinstall.d
+ConditionPathExists=/etc/as13-ws/rebased
+ConditionPathExists=!/etc/as13-ws/flatpaks-preinstalled
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/flatpak remote-modify --system --collection-id=org.flathub.Stable flathub
+ExecStart=/usr/bin/dbus-run-session -- /usr/bin/flatpak preinstall --system --noninteractive --assumeyes
+ExecStartPost=/usr/bin/touch /etc/as13-ws/flatpaks-preinstalled
+
+[Install]
+WantedBy=multi-user.target

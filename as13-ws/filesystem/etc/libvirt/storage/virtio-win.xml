@@ -1,0 +1,8 @@
+<pool type='dir'>
+  <name>virtio-win</name>
+  <source>
+  </source>
+  <target>
+    <path>/usr/share/virtio-win</path>
+  </target>
+</pool>

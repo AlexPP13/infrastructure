@@ -1,0 +1,8 @@
+<pool type='dir'>
+  <name>roms</name>
+  <source>
+  </source>
+  <target>
+    <path>/var/lib/libvirt/roms</path>
+  </target>
+</pool>

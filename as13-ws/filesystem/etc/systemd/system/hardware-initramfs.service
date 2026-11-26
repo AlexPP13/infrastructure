@@ -1,0 +1,10 @@
+[Unit]
+Description=Add VFIO drivers to the initramfs
+Before=rebase.service
+ConditionPathExists=!/etc/as13-ws/hardware-initramfs.enrolled
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rpm-ostree initramfs --enable "--arg=--add-drivers" "--arg=vfio_pci vfio vfio_iommu_type1"
+ExecStart=/usr/bin/install --directory --mode=0755 /etc/as13-ws
+ExecStart=/usr/bin/touch /etc/as13-ws/hardware-initramfs.enrolled

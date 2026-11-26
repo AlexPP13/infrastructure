@@ -1,0 +1,5 @@
+output/
+*.img
+filesystem/luks.key
+bootstrap-secrets.yaml
+.ssh/

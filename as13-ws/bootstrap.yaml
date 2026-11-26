@@ -1,0 +1,364 @@
+variant: fcos
+version: 1.7.0
+ignition:
+  config:
+    merge:
+      - local: bootstrap-secrets.ign
+      # Uncomment when building the local QEMU test image.
+      # - local: bootstrap-dev.ign
+kernel_arguments:
+  should_exist:
+    - mitigations=off
+    - iommu=pt
+    # - iommu.passthrough=0
+    - amd_pstate=active
+    - kvm_amd.nested=1
+    - sysctl.kernel.kexec_load_disabled=1
+  should_not_exist:
+    - mitigations=auto,nosmt
+storage:
+  disks:
+    - device: /dev/disk/by-id/coreos-boot-disk
+      wipe_table: true
+    - device: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S4J4NX0R829673D
+      wipe_table: true
+      partitions:
+        - number: 1
+          label: bios
+          start_mib: 1
+          size_mib: 2
+          type_guid: 21686148-6449-6E6F-744E-656564454649
+        - number: 2
+          label: efi
+          start_mib: 3
+          size_mib: 512
+          resize: true
+          type_guid: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
+          #wipe_partition_entry: true
+        - number: 3
+          label: firmware
+          size_mib: 512
+          resize: true
+          type_guid: EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+          #wipe_partition_entry: true
+        - number: 4
+          label: boot
+          size_mib: 4096
+          resize: true
+          type_guid: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+          #wipe_partition_entry: true
+
+        - number: 5
+          label: root-0
+          size_mib: 65536
+          resize: true
+          type_guid: A19D880F-05FC-4D3B-A006-743F0F84911E
+          #wipe_partition_entry: true
+        - number: 6
+          label: var-0
+          size_mib: 888318
+          resize: true
+          type_guid: A19D880F-05FC-4D3B-A006-743F0F84911E
+          #wipe_partition_entry: true
+        - number: 7
+          label: libvirt
+          size_mib: 262144
+          resize: true
+          type_guid: CA7D7CCB-63ED-4C53-861C-1742536059CC
+          #wipe_partition_entry: true
+    - device: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_1TB_S5H9NS0R417926R
+      wipe_table: true
+      partitions:
+        - number: 1
+          label: root-1
+          size_mib: 65536
+          resize: true
+          type_guid: A19D880F-05FC-4D3B-A006-743F0F84911E
+          #wipe_partition_entry: true
+        - number: 2
+          label: var-1
+          size_mib: 888318
+          resize: true
+          type_guid: A19D880F-05FC-4D3B-A006-743F0F84911E
+          #wipe_partition_entry: true
+
+  raid:
+    - name: md-root
+      level: raid0
+      devices:
+        - /dev/disk/by-partlabel/root-0
+        - /dev/disk/by-partlabel/root-1
+    - name: md-var
+      level: raid0
+      devices:
+        - /dev/disk/by-partlabel/var-0
+        - /dev/disk/by-partlabel/var-1
+
+  luks:
+    - name: luks-root
+      device: /dev/md/md-root
+      wipe_volume: true
+      discard: true
+    - name: luks-var
+      device: /dev/md/md-var
+      wipe_volume: true
+      discard: true
+    - name: luks-libvirt
+      device: /dev/disk/by-partlabel/libvirt
+      wipe_volume: true
+      discard: true
+
+  filesystems:
+    - device: /dev/disk/by-partlabel/efi
+      format: vfat
+      wipe_filesystem: true
+      label: efi
+    - device: /dev/disk/by-partlabel/boot
+      format: xfs
+      wipe_filesystem: true
+      label: boot
+    - device: /dev/disk/by-partlabel/firmware
+      format: vfat
+      wipe_filesystem: true
+      label: firmware
+    - device: /dev/mapper/luks-root
+      format: xfs
+      wipe_filesystem: true
+      label: root
+    - device: /dev/mapper/luks-var
+      format: xfs
+      wipe_filesystem: true
+      with_mount_unit: true
+      label: var
+      path: /var
+
+  files:
+    - path: /etc/coolercontrol/config.toml
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/coolercontrol/config.toml
+    - path: /etc/modules-load.d/it87.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/modules-load.d/it87.conf
+    - path: /etc/hostname
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: as13-ws
+    - path: /etc/skel/.bashrc
+      append:
+        - local: /etc/skel/.bashrc.fragment
+    - path: /etc/dconf/db/local.d/00-local
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/dconf/db/local.d/00-local
+    - path: /etc/containers/registries.conf.d/as13-ws-vm.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/containers/registries.conf.d/as13-ws-vm.conf
+    - path: /etc/flatpak/preinstall.d/default.preinstall
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/flatpak/preinstall.d/default.preinstall
+    - path: /etc/ssh/sshd_config.d/20-authorized-keys.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /etc/ssh/sshd_config.d/20-authorized-keys.conf
+
+    # Active-backup bond beneath the LAN bridge. This mode provides failover
+    # without requiring switch-side link aggregation.
+    - path: /etc/NetworkManager/system-connections/bridge-lan.nmconnection
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/NetworkManager/system-connections/bridge-lan.nmconnection
+    - path: /etc/NetworkManager/system-connections/bond-lan.nmconnection
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/NetworkManager/system-connections/bond-lan.nmconnection
+    - path: /etc/NetworkManager/system-connections/bond-lan-slave-enp6s0.nmconnection
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/NetworkManager/system-connections/bond-lan-slave-enp6s0.nmconnection
+    - path: /etc/NetworkManager/system-connections/bond-lan-slave-enp7s0.nmconnection
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/NetworkManager/system-connections/bond-lan-slave-enp7s0.nmconnection
+
+    # Firewall
+    # - path: /etc/firewalld/zones/public.xml
+    #   mode: 0600
+    #   overwrite: true
+    #   contents:
+    #     local: /etc/firewalld/zones/public.xml
+
+    # Libvirt
+    # Qemu
+    # - path: /etc/libvirt/qemu/Fedora-Workstation.xml
+    #   mode: 0600
+    #   overwrite: true
+    #   contents:
+    #     local: /etc/libvirt/qemu/Fedora-Workstation.xml
+    # - path: /etc/libvirt/qemu/Windows-Gaming.xml
+    #   mode: 0600
+    #   overwrite: true
+    #   contents:
+    #     local: /etc/libvirt/qemu/Windows-Gaming.xml
+    - path: /var/lib/libvirt/roms/XFX.RX7900XTX.24576.221129_1.rom
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /var/lib/libvirt/roms/XFX.RX7900XTX.24576.221129_1.rom
+    - path: /var/lib/libvirt/roms/dummy.rom
+      mode: 0644
+      overwrite: true
+      contents:
+        local: /var/lib/libvirt/roms/dummy.rom
+
+    # Storage
+    # The KVM storage pool manages logical volumes in the kvm volume group
+    # directly; it does not mount the VG at a filesystem path.
+    - path: /etc/libvirt/storage/libvirt.xml
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/libvirt/storage/libvirt.xml
+    - path: /etc/libvirt/storage/images.xml
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/libvirt/storage/images.xml
+    - path: /etc/libvirt/storage/roms.xml
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/libvirt/storage/roms.xml
+    - path: /etc/libvirt/storage/virtio-win.xml
+      mode: 0600
+      overwrite: true
+      contents:
+        local: /etc/libvirt/storage/virtio-win.xml
+
+  links:
+    - path: /etc/libvirt/storage/autostart/libvirt.xml
+      overwrite: true
+      target: /etc/libvirt/storage/libvirt.xml
+    - path: /etc/libvirt/storage/autostart/images.xml
+      overwrite: true
+      target: /etc/libvirt/storage/images.xml
+    - path: /etc/libvirt/storage/autostart/roms.xml
+      overwrite: true
+      target: /etc/libvirt/storage/roms.xml
+    - path: /etc/libvirt/storage/autostart/virtio-win.xml
+      overwrite: true
+      target: /etc/libvirt/storage/virtio-win.xml
+
+  directories:
+    - path: /var/lib/libvirt/images
+    - path: /etc/skel/Development
+
+  trees:
+    - path: /etc/containers/systemd
+      local: /etc/containers/systemd
+    - path: /etc/skel/.config
+      local: /etc/skel/.config
+    - path: /etc/skel/.local
+      local: /etc/skel/.local
+    - path: /etc/skel/.var
+      local: /etc/skel/.var
+    - path: /etc/skel/Development
+      local: /etc/skel/Development
+    - path: /boot/firmware
+      local: /boot/firmware
+
+systemd:
+  units:
+    - name: boot-efi.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=EFI System Partition
+        After=boot.mount
+        Before=bootloader-update.service local-fs.target
+
+        [Mount]
+        What=/dev/disk/by-partlabel/efi
+        Where=/boot/efi
+        Type=vfat
+
+        [Install]
+        WantedBy=local-fs.target
+    - name: boot-firmware.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Firmware partition
+        Requires=boot.mount
+        After=boot.mount
+        Before=local-fs.target
+
+        [Mount]
+        What=/dev/disk/by-partlabel/firmware
+        Where=/boot/firmware
+        Type=vfat
+
+        [Install]
+        WantedBy=local-fs.target
+    - name: boot.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Boot partition
+        Before=local-fs.target
+
+        [Mount]
+        What=/dev/disk/by-partlabel/boot
+        Where=/boot
+        Type=xfs
+
+        [Install]
+        WantedBy=local-fs.target
+    - name: hardware-initramfs.service
+      contents_local: /etc/systemd/system/hardware-initramfs.service
+    - name: dconf-update.service
+      enabled: true
+      contents_local: /etc/systemd/system/dconf-update.service
+    - name: rebase.service
+      enabled: true
+      contents_local: /etc/systemd/system/rebase.service
+    - name: populate-home-skel.service
+      enabled: true
+      contents_local: /etc/systemd/system/populate-home-skel.service
+    - name: flatpak-preinstall.service
+      enabled: true
+      contents_local: /etc/systemd/system/flatpak-preinstall.service
+    - name: libvirt-storage.service
+      enabled: true
+      contents_local: /etc/systemd/system/libvirt-storage.service
+    # GNOME Software does not poll the OCI tag tracked by a bootc deployment.
+    # Periodically fetch and stage the current image for the next reboot.
+    - name: bootc-fetch-apply-updates.timer
+      enabled: true
+    - name: coolercontrold.service
+      enabled: true
+    # # Services
+    # - name: cockpit.service
+    #   enabled: true
+    # - name: podman.service
+    #   enabled: true
+    # # libvirt
+    # - name: virtqemud.service
+    #   enabled: true
+    # # Disable zincati auto updates for now
+    # - name: zincati.service
+    #   enabled: false

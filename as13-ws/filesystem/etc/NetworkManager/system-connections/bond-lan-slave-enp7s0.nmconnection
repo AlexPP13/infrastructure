@@ -1,0 +1,8 @@
+[connection]
+id=bond-lan-slave-enp7s0
+type=ethernet
+interface-name=enp7s0
+master=bond-lan
+slave-type=bond
+
+[ethernet]

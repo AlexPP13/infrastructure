@@ -1,0 +1,153 @@
+[org/gnome/Ptyxis]
+restore-session=false
+restore-window-size=true
+window-size=(uint32 144, uint32 36)
+
+[org/gnome/desktop/background]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///usr/share/backgrounds/gnome/blobs-l.svg'
+picture-uri-dark='file:///usr/share/backgrounds/gnome/blobs-d.svg'
+primary-color='#241f31'
+secondary-color='#000000'
+
+[org/gnome/desktop/break-reminders/eyesight]
+play-sound=true
+
+[org/gnome/desktop/break-reminders/movement]
+duration-seconds=uint32 300
+interval-seconds=uint32 1800
+play-sound=true
+
+[org/gnome/desktop/calendar]
+show-weekdate=true
+week-start-day='monday'
+
+[org/gnome/desktop/datetime]
+automatic-timezone=true
+
+[org/gnome/desktop/input-sources]
+current=uint32 0
+sources=[('xkb', 'us')]
+xkb-options=['lv3:ralt_switch']
+
+[org/gnome/desktop/interface]
+accent-color='slate'
+clock-show-seconds=true
+clock-show-weekday=true
+color-scheme='default'
+cursor-theme='Adwaita'
+enable-animations=true
+enable-hot-corners=false
+font-antialiasing='rgba'
+font-hinting='full'
+gtk-theme='Adwaita'
+icon-theme='Adwaita'
+
+[org/gnome/desktop/peripherals/keyboard]
+delay=uint32 300
+repeat-interval=uint32 10
+
+[org/gnome/desktop/peripherals/mouse]
+natural-scroll=true
+speed=0.0
+
+[org/gnome/desktop/peripherals/touchpad]
+disable-while-typing=false
+speed=0.5
+tap-to-click=false
+two-finger-scrolling-enabled=true
+
+[org/gnome/desktop/privacy]
+remove-old-temp-filesystem=true
+remove-old-trash-filesystem=true
+report-technical-problems=false
+
+[org/gnome/desktop/screen-time-limits]
+daily-limit-seconds=uint32 28800
+
+[org/gnome/desktop/session]
+idle-delay=uint32 0
+
+[org/gnome/desktop/sound]
+event-sounds=true
+theme-name='__custom'
+
+[org/gnome/desktop/wm/preferences]
+action-double-click-titlebar='toggle-maximize'
+action-middle-click-titlebar='none'
+action-right-click-titlebar='menu'
+auto-raise=false
+button-layout='close,appmenu:'
+focus-mode='sloppy'
+
+[org/gnome/mutter]
+dynamic-workspaces=true
+experimental-features=['scale-monitor-framebuffer', 'xwayland-native-scaling', 'autoclose-xwayland']
+overlay-key='Super_L'
+workspaces-only-on-primary=false
+
+[org/gnome/nautilus/list-view]
+default-column-order=['name', 'size', 'type', 'owner', 'group', 'permissions', 'date_modified', 'date_accessed', 'date_created', 'recency', 'detailed_type']
+default-visible-columns=['name', 'size', 'type', 'date_modified']
+
+[org/gnome/nautilus/preferences]
+default-folder-viewer='list-view'
+search-filter-time-type='last_modified'
+
+[org/gnome/settings-daemon/plugins/color]
+night-light-enabled=true
+night-light-schedule-automatic=true
+night-light-temperature=uint32 3700
+
+[org/gnome/settings-daemon/plugins/housekeeping]
+donation-reminder-last-shown=int64 1786322111414455
+
+[org/gnome/settings-daemon/plugins/media-keys]
+volume-step=4
+
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-type='nothing'
+
+[org/gnome/shell]
+disable-extension-version-validation=true
+disabled-extensions=['background-logo@fedorahosted.org', 'blur-my-shell@aunetx']
+enabled-extensions=['gsconnect@andyholmes.github.io', 'just-perfection-desktop@just-perfection', 'AlphabeticalAppGrid@stuarthayhurst']
+favorite-apps=['org.gnome.Ptyxis.desktop', 'org.gnome.Nautilus.desktop', 'com.getmailspring.Mailspring.desktop', 'org.gnome.Epiphany.desktop', 'org.chromium.Chromium.desktop', 'io.github.ungoogled_software.ungoogled_chromium.desktop']
+last-selected-power-profile='balanced'
+welcome-dialog-last-shown-version='50.4'
+
+[org/gnome/shell/app-switcher]
+current-workspace-only=true
+
+[org/gnome/shell/extensions/gsconnect]
+enabled=true
+missing-openssl=false
+show-indicators=false
+
+[org/gnome/shell/extensions/just-perfection]
+max-displayed-search-results=0
+panel-in-overview=true
+window-demands-attention-focus=true
+workspace-switcher-should-show=true
+
+[org/gnome/shell/weather]
+automatic-location=true
+
+[org/gnome/system/location]
+enabled=true
+
+[org/gtk/gtk4/settings/file-chooser]
+show-hidden=false
+sort-directories-first=false
+
+[org/virt-manager/virt-manager/connections]
+autoconnect=['qemu:///system']
+uris=['qemu:///system']
+
+[org/virt-manager/virt-manager/vmlist-fields]
+disk-usage=false
+network-traffic=false
+
+[system/locale]
+region='nl_NL.UTF-8'

@@ -1,0 +1,14 @@
+[connection]
+id=bond-lan
+type=bond
+interface-name=bond-lan
+master=bridge-lan
+slave-type=bridge
+
+[bond]
+mode=active-backup
+miimon=100
+primary=enp7s0
+primary-reselect=always
+
+[bridge-port]

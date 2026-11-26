@@ -1,0 +1,102 @@
+FROM quay.io/fedora/fedora-silverblue:latest
+
+# Use Terra for Mesa and general packages, but keep multimedia on RPM Fusion
+# until Terra's multimedia repository is stable.
+RUN curl \
+    --fail \
+    --location \
+    --proto '=https' \
+    --tlsv1.2 \
+    --retry 3 \
+    --retry-all-errors \
+    --output /etc/yum.repos.d/virtio-win.repo \
+    https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo && \
+    dnf --assumeyes install --nogpgcheck \
+    --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
+    terra-release terra-gpg-keys && \
+    dnf --assumeyes install terra-release-mesa && \
+    dnf --assumeyes install \
+    "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm --eval '%{fedora}').noarch.rpm" && \
+    dnf --assumeyes distro-sync --from-repo=terra-mesa 'mesa-*' --allowerasing && \
+    dnf --assumeyes swap ffmpeg-free ffmpeg --allowerasing && \
+    dnf --assumeyes remove --no-autoremove \
+    firefox \
+    baobab \
+    decibels \
+    epiphany \
+    evince \
+    gnome-calculator \
+    gnome-calendar \
+    gnome-characters \
+    gnome-connections \
+    gnome-contacts \
+    gnome-font-viewer \
+    gnome-logs \
+    gnome-maps \
+    gnome-weather \
+    gthumb \
+    showtime \
+    snapshot && \
+    dnf --assumeyes install \
+    coolercontrold \
+    dbus-daemon \
+    ffmpeg \
+    fio \
+    "https://github.com/samuelngs/apple-emoji-ttf/releases/latest/download/fonts-apple-color-emoji.rpm" \
+    gnome-shell-extension-gsconnect \
+    gnome-shell-extension-just-perfection \
+    gstreamer1-plugins-bad-freeworld \
+    gstreamer1-plugins-ugly \
+    gstreamer1-plugin-openh264 \
+    libva-utils \
+    libvirt-daemon-config-network \
+    libvirt-daemon-kvm \
+    lvm2 \
+    make \
+    mesa-dri-drivers \
+    qemu-kvm \
+    starship \
+    steam-devices \
+    virt-install \
+    virt-manager \
+    virtio-win \
+    --allowerasing && \
+    dnf clean all && \
+    rm -rf \
+    /run/dnf \
+    /run/gluster \
+    /run/selinux-policy \
+    /var/cache/dnf \
+    /var/cache/ldconfig/aux-cache \
+    /var/cache/libdnf5 \
+    /var/cache/libvirt \
+    /var/lib/dnf \
+    /var/log/dnf5.log && \
+    install -d /usr/share/flatpak/remotes.d && \
+    curl \
+    --fail \
+    --location \
+    --proto '=https' \
+    --tlsv1.2 \
+    --retry 3 \
+    --retry-all-errors \
+    --output /usr/share/flatpak/remotes.d/flathub.flatpakrepo \
+    https://dl.flathub.org/repo/flathub.flatpakrepo
+
+RUN curl \
+    --fail \
+    --location \
+    --retry 3 \
+    --retry-all-errors \
+    --output /tmp/alphabetical-grid-extension.zip \
+    https://github.com/stuarthayhurst/alphabetical-grid-extension/releases/latest/download/AlphabeticalAppGrid%40stuarthayhurst.shell-extension.zip && \
+    install -d \
+    /usr/share/gnome-shell/extensions/AlphabeticalAppGrid@stuarthayhurst && \
+    unzip \
+    /tmp/alphabetical-grid-extension.zip \
+    -d /usr/share/gnome-shell/extensions/AlphabeticalAppGrid@stuarthayhurst && \
+    glib-compile-schemas \
+    /usr/share/gnome-shell/extensions/AlphabeticalAppGrid@stuarthayhurst/schemas && \
+    rm -f /tmp/alphabetical-grid-extension.zip
+
+RUN bootc container lint
