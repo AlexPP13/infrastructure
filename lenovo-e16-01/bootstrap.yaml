@@ -52,10 +52,14 @@ storage:
   luks:
     - name: luks-root
       device: /dev/disk/by-partlabel/root
+      clevis:
+        tpm2: true
       wipe_volume: true
       discard: true
     - name: luks-var
       device: /dev/disk/by-partlabel/var
+      clevis:
+        tpm2: true
       wipe_volume: true
       discard: true
 
