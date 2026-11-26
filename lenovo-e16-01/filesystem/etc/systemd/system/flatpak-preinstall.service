@@ -4,14 +4,14 @@ Wants=network-online.target
 After=network-online.target
 ConditionPathExists=/usr/bin/flatpak
 ConditionPathExists=/etc/flatpak/preinstall.d
-ConditionPathExists=/etc/as13-ws/rebased
-ConditionPathExists=!/etc/as13-ws/flatpaks-preinstalled
+ConditionPathExists=/etc/lenovo-e16-01/rebased
+ConditionPathExists=!/etc/lenovo-e16-01/flatpaks-preinstalled
 
 [Service]
 Type=oneshot
 ExecStartPre=/usr/bin/flatpak remote-modify --system --collection-id=org.flathub.Stable flathub
 ExecStart=/usr/bin/dbus-run-session -- /usr/bin/flatpak preinstall --system --noninteractive --assumeyes
-ExecStartPost=/usr/bin/touch /etc/as13-ws/flatpaks-preinstalled
+ExecStartPost=/usr/bin/touch /etc/lenovo-e16-01/flatpaks-preinstalled
 
 [Install]
 WantedBy=multi-user.target

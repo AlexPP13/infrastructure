@@ -1,7 +1,7 @@
 .PHONY: jtbs build registry push ignition image usb vm vm-kargs vm-usb
 
 OUTPUT_DIR := ./output
-IMAGE ?= localhost/as13-ws:latest
+IMAGE ?= localhost/lenovo-e16-01:latest
 LOCAL_REGISTRY ?= localhost:5000
 DISK_DEVICE ?= /dev/sda
 STREAM ?= next
@@ -17,7 +17,7 @@ build:
 	@podman image tree $(IMAGE)
 
 registry:
-	@podman run -it --rm --replace --name as13-ws-registry \
+	@podman run -it --rm --replace --name lenovo-e16-01-registry \
 		--publish 5000:5000 \
 		docker.io/library/registry:2
 
@@ -83,7 +83,7 @@ usb:
 # Create an isolated FCOS test machine. Its first boot applies Ignition, stages
 # the OCI rebase, and reboots into the configured image. SSH is forwarded to
 # localhost:2222 after the rebase completes.
-VM_IMAGE ?= $(LOCAL_REGISTRY)/as13-ws:latest
+VM_IMAGE ?= $(LOCAL_REGISTRY)/lenovo-e16-01:latest
 VM_DIR := $(OUTPUT_DIR)/vm
 VM_NVME0_DISK := $(VM_DIR)/nvme0.img
 VM_NVME1_DISK := $(VM_DIR)/nvme1.img
@@ -135,9 +135,9 @@ vm: vm-kargs
 		-drive if=none,id=boot,file=$(VM_DIR)/boot.img,format=raw \
 		-device virtio-blk-pci,drive=boot,serial=coreos-boot-disk,bus=pcie.0 \
 		-drive if=none,id=nvme0,file=$(VM_NVME0_DISK),format=raw \
-		-device nvme,drive=nvme0,serial=as13-ws-nvme0,bus=pcie.0 \
+		-device nvme,drive=nvme0,serial=lenovo-e16-01-nvme0,bus=pcie.0 \
 		-drive if=none,id=nvme1,file=$(VM_NVME1_DISK),format=raw \
-		-device nvme,drive=nvme1,serial=as13-ws-nvme1,bus=pcie.0 \
+		-device nvme,drive=nvme1,serial=lenovo-e16-01-nvme1,bus=pcie.0 \
 		-vga none \
 		-device virtio-vga,bus=pcie.0 \
 		-device qemu-xhci,id=usb,bus=pcie.0 \
@@ -175,9 +175,9 @@ vm-usb:
 		-drive if=pflash,format=raw,file=$(VM_DIR)/OVMF_VARS.fd \
 		-drive if=none,id=usbboot,file=$(DISK_DEVICE),format=raw,cache=none,aio=native \
 		-drive if=none,id=nvme0,file=$(VM_NVME0_DISK),format=raw \
-		-device nvme,drive=nvme0,serial=as13-ws-nvme0,bus=pcie.0 \
+		-device nvme,drive=nvme0,serial=lenovo-e16-01-nvme0,bus=pcie.0 \
 		-drive if=none,id=nvme1,file=$(VM_NVME1_DISK),format=raw \
-		-device nvme,drive=nvme1,serial=as13-ws-nvme1,bus=pcie.0 \
+		-device nvme,drive=nvme1,serial=lenovo-e16-01-nvme1,bus=pcie.0 \
 		-vga none \
 		-device virtio-vga,bus=pcie.0 \
 		-device qemu-xhci,id=usb,bus=pcie.0 \

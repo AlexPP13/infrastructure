@@ -147,7 +147,7 @@ storage:
       mode: 0644
       overwrite: true
       contents:
-        inline: as13-ws
+        inline: lenovo-e16-01
     - path: /etc/skel/.bashrc
       append:
         - local: /etc/skel/.bashrc.fragment
@@ -156,11 +156,11 @@ storage:
       overwrite: true
       contents:
         local: /etc/dconf/db/local.d/00-local
-    - path: /etc/containers/registries.conf.d/as13-ws-vm.conf
+    - path: /etc/containers/registries.conf.d/lenovo-e16-01-vm.conf
       mode: 0644
       overwrite: true
       contents:
-        local: /etc/containers/registries.conf.d/as13-ws-vm.conf
+        local: /etc/containers/registries.conf.d/lenovo-e16-01-vm.conf
     - path: /etc/flatpak/preinstall.d/default.preinstall
       mode: 0644
       overwrite: true

@@ -3,7 +3,7 @@ Description=Populate root and core home directories from /etc/skel
 After=local-fs.target
 Before=systemd-user-sessions.service
 RequiresMountsFor=/var/home/core
-ConditionPathExists=!/etc/as13-ws/home-skel-populated
+ConditionPathExists=!/etc/lenovo-e16-01/home-skel-populated
 
 [Service]
 Type=oneshot
@@ -12,7 +12,7 @@ ExecStart=/usr/bin/cp -a /etc/skel/.bashrc /etc/skel/.config /etc/skel/.local /e
 ExecStart=/usr/bin/chown -R core:core /var/home/core/.config /var/home/core/.local /var/home/core/.var /var/home/core/.ssh /var/home/core/Development /var/home/core/.bashrc
 ExecStart=/usr/bin/chmod 0700 /var/home/core/.ssh
 ExecStart=/usr/bin/find /var/home/core/.ssh -maxdepth 1 -type f -name id_* -exec /usr/bin/chmod 0600 {} +
-ExecStart=/usr/bin/install -D -m 0644 /dev/null /etc/as13-ws/home-skel-populated
+ExecStart=/usr/bin/install -D -m 0644 /dev/null /etc/lenovo-e16-01/home-skel-populated
 
 [Install]
 WantedBy=multi-user.target

@@ -1,4 +1,4 @@
-# LENOVO-E16-01
+# lenovo-e16-01
 
 `Containerfile` defines the immutable host operating system. It replaces the
 old first-boot package layering and virtio-win repository setup.
@@ -54,7 +54,7 @@ install the restored Flatpaks on an existing machine. From the repository
 root on the host, copy the updated declarations and run preinstall explicitly:
 
 ```sh
-sudo install -m 0644 LENOVO-E16-01/filesystem/etc/flatpak/preinstall.d/default.preinstall \
+sudo install -m 0644 lenovo-e16-01/filesystem/etc/flatpak/preinstall.d/default.preinstall \
     /etc/flatpak/preinstall.d/default.preinstall
 sudo flatpak remote-modify --system --collection-id=org.flathub.Stable flathub
 sudo dbus-run-session -- flatpak preinstall --system --noninteractive --assumeyes
@@ -69,7 +69,7 @@ migrated into the Flatpak sandbox. Preserve or export that data as needed.
 
 On its first boot, Fedora CoreOS applies that Ignition configuration and
 `rebase.service` stages the OCI image as the next deployment. The
-service writes `/etc/as13-ws/rebased` before rebooting, so it runs only
+service writes `/etc/lenovo-e16-01/rebased` before rebooting, so it runs only
 once.
 
 ## Commands
@@ -80,11 +80,11 @@ local cache. Set `IMAGE` to the GitHub Container Registry reference before
 publishing, for example:
 
 ```sh
-make IMAGE=ghcr.io/example/as13-ws:latest push
+make IMAGE=ghcr.io/example/lenovo-e16-01:latest push
 ```
 
-On every push to `main` that changes `LENOVO-E16-01/`, GitHub Actions builds and
-publishes `ghcr.io/<repository-owner>/as13-ws:latest`. The workflow can also
+On every push to `main` that changes `lenovo-e16-01/`, GitHub Actions builds and
+publishes `ghcr.io/<repository-owner>/lenovo-e16-01:latest`. The workflow can also
 be run manually from the Actions tab.
 
 ## Operating-system updates
@@ -92,7 +92,7 @@ be run manually from the Actions tab.
 GNOME Software does not discover updates by polling the OCI tag tracked by a
 bootc deployment. Ignition enables `bootc-fetch-apply-updates.timer`; it
 periodically pulls the current deployment's image (for example,
-`ghcr.io/alexstorm1313/as13-ws:latest`) and stages it for the next reboot.
+`ghcr.io/alexstorm1313/lenovo-e16-01:latest`) and stages it for the next reboot.
 
 After rebasing an already-installed machine to an image that predates this
 change, enable the timer once:
@@ -119,7 +119,7 @@ temporary Ignition fragment and merges it into the Git-ignored output.
 `rebase.service` targets the local QEMU test registry at `13.0.0.1:5000`.
 Change its `ExecStart` image reference to the published GHCR image before a
 physical installation, and remove
-`filesystem/etc/containers/registries.conf.d/as13-ws-vm.conf` from `bootstrap.yaml`
+`filesystem/etc/containers/registries.conf.d/lenovo-e16-01-vm.conf` from `bootstrap.yaml`
 when the registry uses HTTPS.
 
 ## ITE hardware monitoring
@@ -240,6 +240,6 @@ make push
 From inside the VM, stage that image and reboot into it:
 
 ```sh
-sudo rpm-ostree rebase ostree-unverified-registry:13.0.0.1:5000/as13-ws:latest
+sudo rpm-ostree rebase ostree-unverified-registry:13.0.0.1:5000/lenovo-e16-01:latest
 sudo systemctl reboot
 ```

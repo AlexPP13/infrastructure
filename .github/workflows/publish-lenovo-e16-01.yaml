@@ -1,4 +1,4 @@
-name: Publish as13-ws image
+name: Publish lenovo-e16-01 image
 
 on:
   schedule:
@@ -6,8 +6,8 @@ on:
   push:
     branches: [main]
     paths:
-      - LENOVO-E16-01/**
-      - .github/workflows/publish-as13-ws.yaml
+      - lenovo-e16-01/**
+      - .github/workflows/publish-lenovo-e16-01.yaml
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: publish-as13-ws-${{ github.ref }}
+  group: publish-lenovo-e16-01-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/as13-ws
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/lenovo-e16-01
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -49,11 +49,11 @@ jobs:
       - name: Build and publish image
         uses: docker/build-push-action@v7
         with:
-          context: ./LENOVO-E16-01/filesystem
-          file: ./LENOVO-E16-01/Containerfile
+          context: ./lenovo-e16-01/filesystem
+          file: ./lenovo-e16-01/Containerfile
           pull: true
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=gha,scope=as13-ws
-          cache-to: type=gha,mode=max,scope=as13-ws
+          cache-from: type=gha,scope=lenovo-e16-01
+          cache-to: type=gha,mode=max,scope=lenovo-e16-01
