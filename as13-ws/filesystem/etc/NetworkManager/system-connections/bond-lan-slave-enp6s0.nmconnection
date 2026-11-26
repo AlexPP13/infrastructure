@@ -1,8 +1,0 @@
-[connection]
-id=bond-lan-slave-enp6s0
-type=ethernet
-interface-name=enp6s0
-master=bond-lan
-slave-type=bond
-
-[ethernet]

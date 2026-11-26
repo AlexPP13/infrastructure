@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
     paths:
-      - as13-ws/**
+      - LENOVO-E16-01/**
       - .github/workflows/publish-as13-ws.yaml
   workflow_dispatch:
 
@@ -49,8 +49,8 @@ jobs:
       - name: Build and publish image
         uses: docker/build-push-action@v7
         with:
-          context: ./as13-ws/filesystem
-          file: ./as13-ws/Containerfile
+          context: ./LENOVO-E16-01/filesystem
+          file: ./LENOVO-E16-01/Containerfile
           pull: true
           push: true
           tags: ${{ steps.metadata.outputs.tags }}

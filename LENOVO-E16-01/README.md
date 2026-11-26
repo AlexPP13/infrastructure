@@ -1,4 +1,4 @@
-# as13-ws
+# LENOVO-E16-01
 
 `Containerfile` defines the immutable host operating system. It replaces the
 old first-boot package layering and virtio-win repository setup.
@@ -54,7 +54,7 @@ install the restored Flatpaks on an existing machine. From the repository
 root on the host, copy the updated declarations and run preinstall explicitly:
 
 ```sh
-sudo install -m 0644 as13-ws/filesystem/etc/flatpak/preinstall.d/default.preinstall \
+sudo install -m 0644 LENOVO-E16-01/filesystem/etc/flatpak/preinstall.d/default.preinstall \
     /etc/flatpak/preinstall.d/default.preinstall
 sudo flatpak remote-modify --system --collection-id=org.flathub.Stable flathub
 sudo dbus-run-session -- flatpak preinstall --system --noninteractive --assumeyes
@@ -83,7 +83,7 @@ publishing, for example:
 make IMAGE=ghcr.io/example/as13-ws:latest push
 ```
 
-On every push to `main` that changes `as13-ws/`, GitHub Actions builds and
+On every push to `main` that changes `LENOVO-E16-01/`, GitHub Actions builds and
 publishes `ghcr.io/<repository-owner>/as13-ws:latest`. The workflow can also
 be run manually from the Actions tab.
 
