@@ -9,7 +9,7 @@ ConditionPathExists=!/etc/lenovo-e16-01/rebased
 Type=oneshot
 #ExecStart=/usr/bin/rpm-ostree rebase ostree-unverified-registry:13.0.0.1:5000/lenovo-e16-01:latest
 #ExecStart=/usr/bin/rpm-ostree rebase ostree-unverified-registry:13.0.0.235:5000/lenovo-e16-01:latest
-ExecStart=/usr/bin/rpm-ostree rebase ostree-unverified-registry:ghcr.io/alexstorm1313/lenovo-e16-01:latest
+ExecStart=/usr/bin/rpm-ostree rebase ostree-unverified-registry:ghcr.io/alexpp13/lenovo-e16-01:latest
 ExecStart=/usr/bin/install --directory --mode=0755 /etc/lenovo-e16-01
 ExecStart=/usr/bin/touch /etc/lenovo-e16-01/rebased
 ExecStart=/usr/bin/systemctl reboot

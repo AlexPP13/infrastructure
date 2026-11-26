@@ -92,7 +92,7 @@ be run manually from the Actions tab.
 GNOME Software does not discover updates by polling the OCI tag tracked by a
 bootc deployment. Ignition enables `bootc-fetch-apply-updates.timer`; it
 periodically pulls the current deployment's image (for example,
-`ghcr.io/alexstorm1313/lenovo-e16-01:latest`) and stages it for the next reboot.
+`ghcr.io/alexpp13/lenovo-e16-01:latest`) and stages it for the next reboot.
 
 After rebasing an already-installed machine to an image that predates this
 change, enable the timer once:

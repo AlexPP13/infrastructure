@@ -14,8 +14,9 @@ kernel_arguments:
 storage:
   disks:
     - device: /dev/disk/by-id/coreos-boot-disk
-      wipe_table: false
-    - device: /dev/disk/by-id/nvme-SKHynix_HFS001TEM4X169N
+      wipe_table: true
+    # - device: /dev/disk/by-id/nvme-SKHynix_HFS001TEM4X169N
+    - device: /dev/disk/by-id/nvme-HFM512GD3JX016N_FYAAN01331460A83L
       wipe_table: true
       partitions:
         - number: 1
@@ -29,26 +30,26 @@ storage:
           size_mib: 512
           resize: true
           type_guid: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
-          #wipe_partition_entry: true
+          wipe_partition_entry: true
         - number: 3
           label: boot
           size_mib: 4096
           resize: true
           type_guid: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-          #wipe_partition_entry: true
+          wipe_partition_entry: true
 
         - number: 4
           label: root
           size_mib: 131072
           resize: true
           type_guid: CA7D7CCB-63ED-4C53-861C-1742536059CC
-          #wipe_partition_entry: true
+          wipe_partition_entry: true
         - number: 5
           label: var
           size_mib: 0
           resize: true
           type_guid: CA7D7CCB-63ED-4C53-861C-1742536059CC
-          #wipe_partition_entry: true
+          wipe_partition_entry: true
   luks:
     - name: luks-root
       device: /dev/disk/by-partlabel/root

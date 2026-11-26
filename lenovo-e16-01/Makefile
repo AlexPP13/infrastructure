@@ -3,12 +3,15 @@
 OUTPUT_DIR := ./output
 IMAGE ?= localhost/lenovo-e16-01:latest
 LOCAL_REGISTRY ?= localhost:5000
-DISK_DEVICE ?= /dev/sda
+DISK_DEVICE ?= /dev/sdf
 STREAM ?= next
 PLATFORM ?= metal
 ARCHITECTURE ?= x86_64
 BOOT_IMAGE := $(OUTPUT_DIR)/boot.img
 BOOT_SIZE ?= 4G
+
+password:
+	@podman run -ti --rm quay.io/coreos/mkpasswd --method=yescrypt
 
 jtbs: image push
 
@@ -40,20 +43,9 @@ ignition:
 
 	@podman run --interactive --rm \
 		--workdir /workspace \
-		--volume $(CURDIR)/bootstrap-dev.yaml:/workspace/bootstrap-dev.yaml:Z \
-		--volume $(CURDIR)/output:/workspace/output:Z \
-		quay.io/coreos/butane:release \
-		--pretty --strict ./bootstrap-dev.yaml \
-		--output ./output/bootstrap-dev.ign
-
-	@podman run --interactive --rm \
-		--workdir /workspace \
 		--volume $(CURDIR)/bootstrap.yaml:/workspace/bootstrap.yaml:Z \
-		--volume $(CURDIR)/filesystem/boot:/workspace/boot:Z \
 		--volume $(CURDIR)/filesystem/etc:/workspace/etc:Z \
-		--volume $(CURDIR)/filesystem/var:/workspace/var:Z \
 		--volume $(CURDIR)/output/bootstrap-secrets.ign:/workspace/bootstrap-secrets.ign:Z \
-		--volume $(CURDIR)/output/bootstrap-dev.ign:/workspace/bootstrap-dev.ign:Z \
 		--volume $(CURDIR)/output:/workspace/output:Z \
 		quay.io/coreos/butane:release \
 		--pretty --strict --files-dir /workspace ./bootstrap.yaml \
